@@ -1,1 +1,1 @@
-__all__ = [ 'htmlparser' ]
+__all__ = [ 'htmlparser', 'htmlcrawler' ]
