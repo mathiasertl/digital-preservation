@@ -1,0 +1,15 @@
+Technology Watch (2 Gruppen, jeweils 1 Person)
+
+The task here is to create an application that monitors certain (sub-)domains on the web. Similar to a web crawler which harvests files from the web this application shall only identify the files' format and keep a log. It shall fulfill the following requirements:
+
+* Keep record on the different file formats that occur and the number of files of that file format
+* Detailed specification of the file format. (Identifying files just from their file extension is not sufficient because, for instance, PDF 1.1 and PDF 1.6 are two different file formats.) A tool such as DROID shall be used to identify the file format precisely.
+* Send an alert when the number of files of a certain file format drop below a specified threshold (e.g. 10%).
+
+While other solutions are of course possible this application might also be realized as a plug-in for the Heritrix web crawler.
+
+Heritrix: http://crawler.archive.org
+
+DROID: http://sourceforge.net/projects/droid
+
+Betreuer: Hannes Kulovits - kulovits@ifs.tuwien.ac.at
