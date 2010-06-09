@@ -1,5 +1,6 @@
 import os, urllib.parse, urllib.request
 from techwatch import htmlparser
+from techwatch.file import fits
 
 class Crawler(object):
 	def __init__( self, root, lvl=0, maxdepth=10 ):
@@ -32,19 +33,21 @@ class Crawler(object):
 	def img_handler( self, attrs ):
 		src = [ x[1] for x in attrs if x[0] == 'src' ][0]
 		url = self.handle_target( urllib.parse.urlparse( src ) )
-		print( url )
+#		print( url )
 
 	def crawl( self ):
 		# fetch data:
 		page = urllib.request.urlopen( self.root.geturl() ).read()
+		
 		# get format and save it
-# for now we now its html, we don't save it
+		detector = fits.fits()
+		format = detector.detect( page )
 
-		# is it html?
-		#     yes: parse it
-		parser = htmlparser.Parser(
-			start_handler={'a': self.a_handler},
-			startend_handler={'img': self.img_handler} )
-		if type( page ) == bytes:
-			page = str( page, 'utf-8' ) # TODO: Get encoding
-		parser.feed( page )
+		# if its html, we crawl it further
+		if detector.ishtml():
+			parser = htmlparser.Parser(
+				start_handler={'a': self.a_handler},
+				startend_handler={'img': self.img_handler} )
+			if type( page ) == bytes:
+				page = str( page, 'utf-8' ) # TODO: Get encoding
+			parser.feed( page )
