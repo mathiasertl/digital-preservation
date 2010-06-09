@@ -1,1 +1,1 @@
-__all__ = [ 'fits' ]
+__all__ = [ 'file', 'fits' ]

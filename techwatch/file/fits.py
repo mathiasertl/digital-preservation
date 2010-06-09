@@ -20,13 +20,13 @@ class fits( object ):
 		fd_o, name_o = tempfile.mkstemp()
 
 		cmd = [ self.bin, '-i', name, '-o', name_o ]
-		print( ' '.join( cmd ) )
+#		print( ' '.join( cmd ) )
 		p = subprocess.Popen( cmd )
 		p.communicate()
 
 		parser = fits_parser( name_o )
 		self.format = parser.parse()
-		print( self.format )
+#		print( self.format )
 
 		os.remove( name )
 		os.remove( name_o )
