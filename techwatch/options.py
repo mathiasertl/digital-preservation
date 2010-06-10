@@ -25,6 +25,12 @@ class options( object ):
 		parser.add_option( '--detector-backend', default="file", metavar="[file|fits]",
 			help="""Choose your file format detector backend (default: %default). """
 				"""If you choose 'fits', you must also set the FITS_PATH environment variable.""" )
+		parser.add_option( '--from', default="e0326788@student.tuwien.ac.at", 
+			help="Default Sender of notification mails." )
+		parser.add_option( '--to', default="e0326788@student.tuwien.ac.at",
+			help="Default Recipient of notifications." )
+		parser.add_option( '--smtp-server', default="mr.tuwien.ac.at",
+			help="Default SMTP relay. See README.txt for help." )
 
 		# sqlite options:
 		sqlite_group = OptionGroup( parser, "SQLite3 options" )
