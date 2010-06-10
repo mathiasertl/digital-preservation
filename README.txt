@@ -2,7 +2,8 @@
 
 === Requirements ===
 This script is written in pure python 3. You must have python 3 installed in
-order to run this script. 
+order to run this script. As this script uses sqlite3, you also have to have the
+sqlite3 libraries, but you should be fine if you have python3.
 
 The script detects file-formats either using the unix command-line tool file[1]
 or FITS[2], which is based on the Java programming language. You must have at
@@ -26,6 +27,11 @@ Usually you have to give at least the --to parameter (if you want to receive
 notifications). So a typical invocation might look like:
 	./watcher.py --max-depth 2 --to=e0326788@student.tuwien.ac.at \
 		--smtp-relay=mgate.chello.at --seed=http://vowi.fsinf.at
+
+The above command takes about 8 minutes on my machine.
+
+Note: I took http://vowi.fsinf.at as seed, because I am the webmaster there and
+I don't want to deal with a complaining webmaster ;-)
 
 === Command-line parameters ===
 The --help parameter gives a complete list of all parameters. This section
@@ -59,3 +65,18 @@ whatever the majority of the tools concluded.
 Note that FITS takes quite some time to run - it is *much* slower than the
 file-backend.
 
+=== Evaluating the results ===
+If you have the sqlite3 command-line utilities installed, you can evaluate the
+results with the sqlite3 utility:
+	sqlite3 db.sqlite3
+	> .tables
+	scan_1276206535
+	> select * from scan_1276206535;
+	...
+
+=== Possible improvements ===
+* The file-format detection is rather simple, it does not employ any
+  intelligence above what the used tools say. For example, with the file
+  backend, the image-size of image files is part of the format.
+* This really should be multithreaded.
+* Ability to define certain break conditions (i.e. "stay on the same domain")
