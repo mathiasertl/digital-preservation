@@ -4,16 +4,17 @@ import os
 from techwatch import *
 from techwatch.db import sqlite
 
-os.remove( './test.db' )
-db = sqlite.backend( './test.db' )
+db_path = options.get( 'database' )
+if os.path.exists( db_path ):
+	os.remove( db_path )
+db = sqlite.backend( db_path )
+recursion_depth = options.get( 'max_depth' )
 
-path = "http://tubasis.at/~mati/test.html"
-crawler = htmlcrawler.Crawler( path, db, 3 )
+path = "http://vowi.fsinf.at"
+#path = "http://www.gnu.org/copyleft/fdl.html"
+#path = "http://tubasis.at/~mati/test.html"
+#path = "http://vowi.fsinf.at/wiki?title=FAQ Abkürzungen&oldid=49098"
+crawler = htmlcrawler.Crawler( path, db, recursion_depth )
 crawler.crawl()
 
 db.queue.join( )
-
-#page = open( path ).read()
-#if type( page ) == type( bytes ):
-#	page = str( page, 'utf-8' ) # TODO: Get encoding
-#parser.feed( page )
