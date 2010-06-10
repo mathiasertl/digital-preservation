@@ -87,3 +87,26 @@ class backend(object):
 			return False
 		else:	
 			return True
+
+	def formats( self ):
+		conn = sqlite3.connect( self.path )
+		c = conn.cursor()
+		c.execute( """SELECT format FROM %s GROUP BY format"""%(self.table) )
+		results = c.fetchall()
+		conn.commit()
+		c.close()
+
+		# if you do not understand the following statement, google
+		# list-comprehension
+		return [ result[0] for result in results ]
+
+	def percentage( self, format ):
+		conn = sqlite3.connect( self.path )
+		c = conn.cursor()
+		c.execute( """SELECT COUNT(*) FROM %s"""%(self.table) )
+		total = c.fetchone()[0]
+
+		c.execute( """SELECT COUNT(*) FROM %s WHERE format=?"""%(self.table), (format,) )
+		relative = c.fetchone()[0]
+
+		return (relative * 100)/total
