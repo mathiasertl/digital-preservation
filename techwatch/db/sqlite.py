@@ -1,3 +1,7 @@
+"""
+Database backend using sqlite3.
+"""
+
 from techwatch import options
 import os, time, sqlite3, queue
 from threading import Thread

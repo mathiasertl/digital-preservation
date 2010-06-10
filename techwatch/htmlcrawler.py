@@ -1,3 +1,7 @@
+"""
+Main HTML crawler function.
+"""
+
 import os, sys, html, urllib.parse, urllib.request
 from techwatch import htmlparser, options
 import techwatch.file

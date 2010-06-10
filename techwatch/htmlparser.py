@@ -1,3 +1,7 @@
+"""
+This module implements a simple HTML parser.
+"""
+
 from html.parser import HTMLParser
 
 class Parser( HTMLParser ):

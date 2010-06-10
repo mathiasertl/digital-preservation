@@ -1,3 +1,7 @@
+"""
+Format detection backend using FITS.
+"""
+
 import os, tempfile, subprocess
 import xml.etree.ElementTree as etree
 

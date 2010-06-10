@@ -1,3 +1,7 @@
+"""
+Format detection backend using the unix tool "file".
+"""
+
 from subprocess import Popen, PIPE
 import os, tempfile
 
