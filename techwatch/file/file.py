@@ -4,15 +4,23 @@ import os, tempfile
 
 class file( object ):
 	def detect( self, data ):
-		fd, name = tempfile.mkstemp()
-		f = os.fdopen( fd, 'w+b' )
-		f.write( data )
-		f.flush()
+		if len( data ) < 10000:
+			cmd = ['file', '-b', '-']
+			p = Popen( cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE )
+			stdout, stderr = p.communicate( data )
+		else:
+			# we get a broken pipe somewhere above 120kbyte, So 
+			# go over a temporary file. This is slower, but safer.
+			fd, name = tempfile.mkstemp()
+			f = os.fdopen( fd, 'w+b' )
+			f.write( data )
+			f.flush()
+			f.close()
 
-		cmd = ['file', '-b', name ]
-		p = Popen( cmd, stdout=PIPE, stderr=PIPE )
-		stdout, stderr = p.communicate()
-		os.remove( name )
+			cmd = ['file', '-b', name ]
+			p = Popen( cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE )
+			stdout, stderr = p.communicate()
+			os.remove( name )
 		
 		if p.returncode == 0:
 			self.format = stdout.strip()
