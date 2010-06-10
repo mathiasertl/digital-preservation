@@ -2,7 +2,7 @@
 Format detection backend using FITS.
 """
 
-import os, tempfile, subprocess
+import os, tempfile, subprocess, platform
 import xml.etree.ElementTree as etree
 
 class backend( object ):
@@ -13,15 +13,14 @@ class backend( object ):
 	set the environment variable FITS_PATH to point to the directory where
 	fits.sh is located.
 
-	@TODO: make this windows compatible.
 	@see: L{techwatch.file}
 	"""
 	def __init__( self ):
 		"""
 		Constructor. 
 
-		@raises RuntimeError: If FITS_PATH is not set or set
-		incorrectly.
+		@raises RuntimeError: If FITS_PATH is not set/set incorrectly,
+			if running on an unsupported architecture.
 		"""
 		if 'FITS_PATH' not in os.environ.keys():
 			raise RuntimeError( "Environment variable FITS_PATH not set" )
@@ -29,7 +28,15 @@ class backend( object ):
 		self.path = os.environ['FITS_PATH']
 		if not os.path.exists( self.path + '/fits.sh' ):
 			raise RuntimeError( "%s not found" %(self.path) )
-		self.bin = self.path + '/fits.sh' 
+
+		# detect system and set the script accordingly
+		system = platform.system()
+		if system == "Linux" or system == "Darwin":
+			self.bin = self.path + '/fits.sh' 
+		elif system == "Windows":
+			self.bin = self.path + '/fits.bat'
+		else:
+			raise RuntimeError( "Running on an unsupported platform!" )
 
 	def detect( self, data ):
 		"""
