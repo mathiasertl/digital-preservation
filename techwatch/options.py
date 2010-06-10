@@ -26,16 +26,22 @@ class options( object ):
 			help="""Choose your file format detector backend (default: %default). """
 				"""If you choose 'fits', you must also set the FITS_PATH environment variable.""" )
 		parser.add_option( '--from', default="e0326788@student.tuwien.ac.at", 
-			help="Default Sender of notification mails." )
+			metavar="user@example.com",
+			help="Default sender of notification mails (Default: %default)." )
 		parser.add_option( '--to', default="e0326788@student.tuwien.ac.at",
-			help="Default Recipient of notifications." )
+			metavar="user@example.com",
+			help="Default recipient of notifications." )
 		parser.add_option( '--smtp-server', default="mr.tuwien.ac.at",
-			help="Default SMTP relay. See README.txt for help." )
+			help="Default SMTP relay (default: %default). See README.txt for help." )
+		parser.add_option( '--threshold', default=10.0, type='float',
+			help="Send an error if a fileformat is below the specified threshold (default: %default)" )
+		parser.add_option( '--seed', default='http://vowi.fsinf.at', metavar='URL',
+			help="The URL where to start crawling (default: %default)" )
 
 		# sqlite options:
 		sqlite_group = OptionGroup( parser, "SQLite3 options" )
 		sqlite_group.add_option( '--database', metavar="PATH", 
-			default="test.sqlite3",
+			default="db.sqlite3",
 			help="Path to SQLite3 database." )
 		sqlite_group.add_option( '--cache-size', metavar='N', type="int", default=1000,
 			help="Edit size of in-memory cache size for already fetched URLs (default: %default)" )
