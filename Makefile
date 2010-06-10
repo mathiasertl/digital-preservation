@@ -11,5 +11,5 @@ check:
 	epydoc --no-private --no-imports --check ${MODULES}
 
 clean:
-	-rm -rf ${HTML_DIR} ${PDF_DIR}
+	-rm -rf ${HTML_DIR}
 
