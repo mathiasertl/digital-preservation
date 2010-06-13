@@ -38,7 +38,7 @@ class options( object ):
 		parser.add_option( '--seed', default='http://vowi.fsinf.at', metavar='URL',
 			help="The URL where to start crawling (default: %default)" )
 		parser.add_option( '--policy', type="choice", choices=["all", "same-domain"],
-			default="same-domain", dest="crawling_policy",
+			default="same-domain", dest="crawling_policy", metavar='[all|same-domain]',
 			help="Choose on which policy to follow links: Either follow 'all' links or stay on the same domain (default: %default)" )
 
 		# sqlite options:
