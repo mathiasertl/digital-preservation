@@ -79,4 +79,3 @@ results with the sqlite3 utility:
   intelligence above what the used tools say. For example, with the file
   backend, the image-size of image files is part of the format.
 * This really should be multithreaded.
-* Ability to define certain break conditions (i.e. "stay on the same domain")

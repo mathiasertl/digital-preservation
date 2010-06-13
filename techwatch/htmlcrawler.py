@@ -30,7 +30,7 @@ class Crawler(object):
 
 		self.url = self.get_url( url )
 		self.urlstr = self.url.geturl()
-		print( 'crawler: %s, lvl: %s/%s' % (self.urlstr, lvl, maxdepth) )
+#		print( 'crawler: %s, lvl: %s/%s' % (self.urlstr, lvl, maxdepth) )
 
 		self.db = db
 		self.lvl = lvl
@@ -48,12 +48,21 @@ class Crawler(object):
 		while path.find( '//' ) >= 0:
 			path = path.replace( '//', '/' )
 
-		# query string needs special treatment :-(
-		query = urllib.parse.parse_qsl( url.query )
-		query = urllib.parse.urlencode( query )
+		try:
+			path.encode( 'ascii' )
+		except UnicodeEncodeError:
+			path = urllib.parse.quote( path )
+
+		try:
+			url.query.encode( 'ascii' )
+			query = url.query
+		except UnicodeEncodeError:
+			# query string needs special treatment :-(
+			query = urllib.parse.parse_qsl( url.query )
+			query = urllib.parse.urlencode( query )
 		
 		return urllib.parse.ParseResult( url.scheme, url.netloc,
-			urllib.parse.quote( path ), url.params, query, None )
+			path, url.params, query, None )
 
 	def handle_target( self, url ):
 		"""
@@ -78,9 +87,14 @@ class Crawler(object):
 			scheme = self.url.scheme
 		if netloc == "":
 			netloc = self.url.netloc
+
+		try:
+			url.path.encode( 'ascii' )
+		except UnicodeEncodeError:
+			path = urllib.parse.quote( path )
+
 		if not path.startswith( '/' ):
-			basepath = urllib.parse.unquote( self.url.path )
-			path = os.path.dirname( basepath ) + '/' + path
+			path = os.path.dirname( self.url.path ) + '/' + path
 		while path.find( '//' ) >= 0:
 			path = path.replace( '//', '/' )
 
@@ -128,10 +142,13 @@ class Crawler(object):
 		policy = options.get( 'crawling_policy' )
 		if policy == 'same-domain' and url.netloc != self.url.netloc:
 			return
-
-		if not self.is_same_url( url ) or self.db.have_it( url.geturl() ):
-			crawler = Crawler( url.geturl(), self.db, self.maxdepth, self.lvl+1 )
-			crawler.crawl()
+		if self.is_same_url( url ):
+			return
+		if self.db.have_it( url.geturl() ):
+			return
+		
+		crawler = Crawler( url.geturl(), self.db, self.maxdepth, self.lvl+1 )
+		crawler.crawl()
 
 	def img_handler( self, attrs ):
 		"""
@@ -178,6 +195,7 @@ class Crawler(object):
 		if self.lvl > self.maxdepth:
 			return
 		if self.db.have_it( self.urlstr ):
+			print( "NOT CRAWL: %s"%(self.url) )
 			return
 
 		# fetch data:
