@@ -123,6 +123,12 @@ class Crawler(object):
 			return
 
 		url = self.handle_target( urllib.parse.urlparse( src[0] ) )
+		
+		# do not crawl link if it violates crawling-policy:
+		policy = options.get( 'crawling_policy' )
+		if policy == 'same-domain' and url.netloc != self.url.netloc:
+			return
+
 		if not self.is_same_url( url ) or self.db.have_it( url.geturl() ):
 			crawler = Crawler( url.geturl(), self.db, self.maxdepth, self.lvl+1 )
 			crawler.crawl()
@@ -147,6 +153,12 @@ class Crawler(object):
 			return
 
 		url = self.handle_target( urllib.parse.urlparse( src[0] ) )
+		
+		# do not crawl link if it violates crawling-policy:
+		policy = options.get( 'crawling_policy' )
+		if policy == 'same-domain' and url.netloc != self.url.netloc:
+			return
+
 		if not self.db.have_it( url.geturl() ):
 			# fetch this url
 			crawler = Crawler( url.geturl(), self.db, self.maxdepth, self.lvl+1 )

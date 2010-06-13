@@ -37,6 +37,9 @@ class options( object ):
 			help="Send an error if a fileformat is below the specified threshold (default: %default)" )
 		parser.add_option( '--seed', default='http://vowi.fsinf.at', metavar='URL',
 			help="The URL where to start crawling (default: %default)" )
+		parser.add_option( '--policy', type="choice", choices=["all", "same-domain"],
+			default="same-domain", dest="crawling_policy",
+			help="Choose on which policy to follow links: Either follow 'all' links or stay on the same domain (default: %default)" )
 
 		# sqlite options:
 		sqlite_group = OptionGroup( parser, "SQLite3 options" )
