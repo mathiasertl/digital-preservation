@@ -3,7 +3,7 @@ Main HTML crawler function.
 """
 
 import os, sys, html, urllib.parse, urllib.request
-from techwatch import htmlparser, options
+from techwatch import htmlparser, options, robots
 import techwatch.file
 
 class Crawler(object):
@@ -30,6 +30,7 @@ class Crawler(object):
 
 		self.url = self.get_url( url )
 		self.urlstr = self.url.geturl()
+		self.robots = robots.get_instance()
 #		print( 'crawler: %s, lvl: %s/%s' % (self.urlstr, lvl, maxdepth) )
 
 		self.db = db
@@ -146,6 +147,11 @@ class Crawler(object):
 			return
 		if self.db.have_it( url.geturl() ):
 			return
+
+		self.robots.add_url( url.netloc, url.scheme + '://' + url.netloc + '/robots.txt' )
+		if not self.robots.can_fetch( url.netloc, '*', url.geturl() ):
+			# disallowed by robots.txt
+			return
 		
 		crawler = Crawler( url.geturl(), self.db, self.maxdepth, self.lvl+1 )
 		crawler.crawl()
@@ -174,6 +180,11 @@ class Crawler(object):
 		# do not crawl link if it violates crawling-policy:
 		policy = options.get( 'crawling_policy' )
 		if policy == 'same-domain' and url.netloc != self.url.netloc:
+			return
+		
+		self.robots.add_url( url.netloc, url.scheme + '://' + url.netloc + '/robots.txt' )
+		if not self.robots.can_fetch( url.netloc, '*', url.geturl() ):
+			# disallowed by robots.txt
 			return
 
 		if not self.db.have_it( url.geturl() ):
