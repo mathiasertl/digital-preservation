@@ -19,10 +19,12 @@ class options( object ):
 
 		parser = OptionParser()
 		parser.add_option( '--database-backend', metavar="sqlite3",
-			default="sqlite3", help="""Choose your database backend. For now, the only available backend is sqlite3.""" )
+			choices=['sqlite3'], default="sqlite3",
+			help="""Choose your database backend. For now, the only available backend is sqlite3.""" )
 		parser.add_option( '--max-depth', metavar="N", default=3, type="int",
 			help="Choose the maximum recursion depth while crawling the web (default: %default)" )
-		parser.add_option( '--detector-backend', default="file", metavar="[file|fits]",
+		parser.add_option( '--detector-backend', default="file", 
+			metavar="[file|fits]", choices=['file', 'fits'],
 			help="""Choose your file format detector backend (default: %default). """
 				"""If you choose 'fits', you must also set the FITS_PATH environment variable.""" )
 		parser.add_option( '--from', default="e0326788@student.tuwien.ac.at", 
